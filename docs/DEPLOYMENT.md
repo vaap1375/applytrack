@@ -1,6 +1,8 @@
 # Production handoff: Render + Neon
 
-Prepared, not deployed. This remains a private, single-owner application even though its source repository is public. Do not enable public signup or Gmail automation as part of deployment.
+The owner has deployed [ApplyTrack on Render](https://applytrack-6mts.onrender.com) and verified production login, dashboard, application creation, reminders, and Gmail OAuth. Neon was initialized to `0002 (head)` in the preceding migration session. The instructions below remain a reproducible deployment/recovery reference; production Gmail sync is not separately confirmed.
+
+This remains a private, single-owner application even though its source repository is public. Do not enable public signup or Gmail automation as part of deployment.
 
 ## 1. Credentials and data first
 

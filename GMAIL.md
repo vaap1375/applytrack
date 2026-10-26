@@ -1,3 +1,5 @@
+> Current production evidence: the owner verified Gmail OAuth at the deployed Render site. Production synchronization has not been separately confirmed. Earlier local sync evidence and synthetic fixtures do not establish production sync or real-world matching accuracy.
+
 # Gmail integration
 
 ApplyTrack supports a separate Google authorization, manual resumable synchronization, deterministic email analysis, review suggestions, and guarded status updates. **Automatic updates are disabled by default.** No Gmail message is sent, modified, deleted, or marked read. There is no paid AI API, periodic scheduler, or queue service.

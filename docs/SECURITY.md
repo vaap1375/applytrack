@@ -1,10 +1,12 @@
+> Current publication follow-up: the authenticated GitHub account is now `vaap1375`, has write access to the intended repository, and remote `main` matches the previously reviewed local commit. The owner has deployed the private application. Historical access/deployment blockers below describe the earlier readiness pass; current scan results are recorded in VERIFICATION.md. Credential rotation is not automatically performed or assumed.
+
 # Security and publication review
 
 Review date: 2026-10-26. This is a source/configuration review plus automated regression and dependency checks, not an independent penetration test or a claim that no vulnerabilities exist.
 
 ## Publication boundary
 
-The workspace initially had no Git repository or history. The intended public remote, `https://github.com/vaap1375/applytrack`, returned no refs and is empty. Local `main` and that exact `origin` were initialized. The authenticated account `vaapatel` has read access and **no push permission**; publication is blocked until the owner authenticates a writer or grants write access. No force push or remote overwrite is appropriate.
+The workspace initially had no Git repository or history. The intended public remote is `https://github.com/vaap1375/applytrack`. For the final publication pass, authenticated account `vaap1375` has write permission and remote `main` was verified to match the reviewed local initial commit. No history overwrite or force push is used. Both `.env` and `.env.production` remain ignored and untracked; current scan results are in VERIFICATION.md.
 
 Only reviewed source, synthetic fixtures, lockfiles, and documentation belong in the initial commit. `.env`, caches, virtual environments, node_modules, compiled output, database dumps, private keys, OAuth credential/token JSON patterns, backups, and local tooling directories are excluded by `.gitignore`. The root Docker context independently excludes private configuration and generated files. Docker named volumes are outside the source tree and are not publication material. No screenshots or mailbox export are included.
 
@@ -39,7 +41,7 @@ Database pooling is bounded; migrations use an optional direct URL and execute e
 ## Outstanding release requirements
 
 1. **Rotate the Google OAuth client secret previously exposed in a screenshot before production.** No automatic rotation was performed. Preserve and separately back up the existing encryption key.
-2. Authenticate a GitHub account with write permission before pushing. Recheck remote refs and scan the exact staged content before publication.
-3. Configure Render/Neon/Supabase/Google settings and backups manually. No infrastructure was provisioned; live TLS, proxy ingress, provider logs, cloud migration, and token behavior remain release checks.
+2. Recheck remote refs and scan the exact staged content before each publication; writer access is now available.
+3. The owner has deployed Render and verified core production flows; Neon initialization reached revision 0002 in the preceding session. Provider logs, backup/restore operations, browser refresh/revocation, and broader production checks still need deliberate ongoing review.
 4. Validate actual recruiting emails with automation off. The owner-reported 12-message sync with zero matches establishes connectivity only.
 5. Run the browser/mobile/accessibility checklist and capture only sanitized genuine screenshots. No browser was connected during this audit.

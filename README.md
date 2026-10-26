@@ -2,6 +2,8 @@
 
 A private job application workspace that turns public job links and recruiting emails into editable tracking information, follow-ups, and an auditable application timeline.
 
+**[Live application](https://applytrack-6mts.onrender.com)** · The public repository showcases the implementation; the deployed workspace is private and accepts only its authorized owner. Recruiters can review the code and documentation without an account.
+
 Job hunting scatters context across job boards, spreadsheets, and an inbox. ApplyTrack keeps that context together while leaving the owner in control of what gets saved or changed.
 
 ## What works today
@@ -12,22 +14,22 @@ Job hunting scatters context across job boards, spreadsheets, and an inbox. Appl
 - **Private access:** persistent Supabase sessions, refresh and logout handling, server-verified asymmetric JWTs, and owner-scoped queries.
 - **Gmail:** read-only OAuth, encrypted refresh tokens, manual incremental sync, deterministic classification and matching, approval/dismissal, guarded opt-in status changes, and audited undo.
 
-Gmail sync runs when requested; there is no continuous inbox monitor. Automatic changes default to off. The owner reports a successful real OAuth connection and a first sync of 12 messages with zero matches or updates. That demonstrates connectivity, not classification accuracy.
+Gmail sync runs when requested; there is no continuous inbox monitor. Automatic changes default to off. The owner has verified production deployment, Supabase password login, the authenticated dashboard, application creation in Neon, reminders, and Gmail OAuth. Production Gmail synchronization has not been separately confirmed; real-world classification and matching accuracy remain unverified.
 
 ## Architecture
 
 ```mermaid
 flowchart LR
-    Browser[React + TypeScript] -->|Same-origin API / Bearer JWT| App[FastAPI + compiled React]
+    Browser[React + TypeScript] -->|Same-origin API / Bearer JWT| App[Render: FastAPI + compiled React]
     Browser -->|Sign-in / session refresh| Auth[Supabase Auth]
     App -->|Verify JWT using JWKS| Auth
     App -->|SQLAlchemy / TLS| DB[(PostgreSQL / Neon)]
     App -->|Validated public requests| Jobs[Job posting APIs / metadata]
     App -->|Read-only OAuth / manual sync| Gmail[Gmail API]
-    GitHub[GitHub Actions] -->|Tests + production image build| App
+    Source[GitHub repository] --> CI[GitHub Actions: tests + image checks]
 ```
 
-React, TypeScript, Vite, Tailwind CSS, FastAPI, Python, SQLAlchemy, Alembic, PostgreSQL, Supabase Auth, Docker, and GitHub Actions. The prepared hosting model is one Render Docker web service with Neon; no cloud infrastructure has been deployed by this task.
+React, TypeScript, Vite, Tailwind CSS, FastAPI, Python, SQLAlchemy, Alembic, PostgreSQL, Supabase Auth, Docker, and GitHub Actions. Production runs as one Render Docker web service backed by Neon PostgreSQL, with Supabase providing authentication. Alembic manages the database schema.
 
 ### Engineering highlights
 
@@ -85,19 +87,21 @@ npm test
 npm run build
 ```
 
+Current local verification: **206 backend tests and 44 frontend tests passed**, with separate TypeScript, frontend production build, test-database schema checks, and production-image smoke checks.
+
 See [verification evidence](VERIFICATION.md) for actual results, limitations, and production container checks. Tests use synthetic fixtures and mocked Google/Supabase transports; fixture results are not real-world accuracy estimates.
 
 ## Deployment and security
 
 [Production deployment guide](docs/DEPLOYMENT.md) covers Render, Neon, migrations, backups, Supabase, Google redirects, free-tier limits, and rollback. [Security review](docs/SECURITY.md) records publication checks and remaining requirements.
 
-**Before production, rotate the Google OAuth client secret previously exposed in a screenshot.** Keep the existing encryption key secure and stable. Neither credential rotation nor deployment has been performed here.
+**Credential hygiene:** a Google OAuth client secret was previously exposed in a screenshot; rotation remains an owner action unless already completed. Never publish credentials, and preserve the encryption key needed by existing stored tokens. This documentation pass does not change credentials or production configuration.
 
 Browser sessions use Supabase-supported localStorage persistence. Successful same-origin XSS can read browser tokens; CSP and text rendering reduce risk but do not eliminate it. Backend JWT checks remain mandatory. Revoked sessions can retain access until a previously issued JWT expires.
 
 ## Screenshots
 
-No sanitized browser screenshots were captured automatically because no browser was connected. Use the [short screenshot checklist](docs/SCREENSHOTS.md) to capture the actual application with clearly labeled demo data before adding images here. Do not publish personal records or inbox content.
+No approved, privacy-safe application screenshots are currently included. Use the [short screenshot checklist](docs/SCREENSHOTS.md) to capture the actual application with clearly labeled demo data before adding images here. Do not publish personal records or inbox content.
 
 ## Limits and roadmap
 
